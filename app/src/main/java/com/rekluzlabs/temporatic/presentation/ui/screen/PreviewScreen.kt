@@ -40,6 +40,9 @@ fun PreviewScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            val context = androidx.compose.ui.platform.LocalContext.current
+            val screenshotFile by viewModel.screenshotFile.collectAsState()
+
             Spacer(modifier = Modifier.height(24.dp))
             
             Text(
@@ -81,9 +84,14 @@ fun PreviewScreen(
             
             // Actions
             Button(
-                onClick = { /* TODO: Copy */ },
+                onClick = { 
+                    screenshotFile?.let { 
+                        com.rekluzlabs.temporatic.utils.ClipboardHelper.copyBitmapToClipboard(context, it) 
+                    }
+                },
                 modifier = Modifier.fillMaxWidth().height(56.dp),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp),
+                enabled = screenshotFile != null
             ) {
                 Text(stringResource(R.string.copy_to_clipboard))
             }

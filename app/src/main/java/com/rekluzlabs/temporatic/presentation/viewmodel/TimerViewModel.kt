@@ -3,11 +3,13 @@ package com.rekluzlabs.temporatic.presentation.viewmodel
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rekluzlabs.temporatic.data.service.ScreenCaptureManager
+import com.rekluzlabs.temporatic.utils.BitmapUtils
+import com.rekluzlabs.temporatic.utils.DateTimeUtils
+import com.rekluzlabs.temporatic.utils.FileUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
@@ -15,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,6 +38,9 @@ class TimerViewModel @Inject constructor(
     private val _capturedBitmap = MutableStateFlow<Bitmap?>(null)
     val capturedBitmap = _capturedBitmap.asStateFlow()
 
+    private val _screenshotFile = MutableStateFlow<File?>(null)
+    val screenshotFile = _screenshotFile.asStateFlow()
+
     private val _mediaProjectionIntent = MutableStateFlow<Intent?>(null)
     val mediaProjectionIntent = _mediaProjectionIntent.asStateFlow()
 
@@ -49,10 +55,7 @@ class TimerViewModel @Inject constructor(
     }
 
     fun startCountdown(duration: Int) {
-        if (_mediaProjectionIntent.value == null) {
-            // Permission needed - this should be handled by the UI
-            return
-        }
+        if (_mediaProjectionIntent.value == null) return
 
         _countdownState.value = duration
         _currentScreen.value = "countdown"
@@ -66,7 +69,7 @@ class TimerViewModel @Inject constructor(
                 }
             }
             
-            // Countdown finished - capture screenshot
+            delay(500) // Small grace period
             captureScreenshot()
         }
     }
@@ -77,9 +80,20 @@ class TimerViewModel @Inject constructor(
         val mediaProjection = projectionManager.getMediaProjection(-1, intent)
         
         if (mediaProjection != null) {
-            val bitmap = screenshotManager.captureScreen(mediaProjection)
-            _capturedBitmap.value = bitmap
-            _currentScreen.value = "preview"
+            val rawBitmap = screenshotManager.captureScreen(mediaProjection)
+            if (rawBitmap != null) {
+                val timestamp = DateTimeUtils.getCurrentTimestamp()
+                val deviceInfo = DateTimeUtils.getDeviceInfo()
+                val annotatedBitmap = BitmapUtils.addTimestampOverlay(rawBitmap, timestamp, deviceInfo)
+                
+                val file = FileUtils.saveBitmap(context, annotatedBitmap)
+                
+                _capturedBitmap.value = annotatedBitmap
+                _screenshotFile.value = file
+                _currentScreen.value = "preview"
+            } else {
+                _currentScreen.value = "home"
+            }
             mediaProjection.stop()
         } else {
             _currentScreen.value = "home"
@@ -89,6 +103,7 @@ class TimerViewModel @Inject constructor(
     fun reset() {
         countdownJob?.cancel()
         _capturedBitmap.value = null
+        _screenshotFile.value = null
         _currentScreen.value = "home"
     }
 }
