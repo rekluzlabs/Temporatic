@@ -44,10 +44,27 @@ class TimerViewModel @Inject constructor(
     private val _selectedFolderUri = MutableStateFlow<android.net.Uri?>(null)
     val selectedFolderUri = _selectedFolderUri.asStateFlow()
 
+    private val _isDetectionEnabled = MutableStateFlow(false)
+    val isDetectionEnabled = _isDetectionEnabled.asStateFlow()
+
     private val _mediaProjectionIntent = MutableStateFlow<Intent?>(null)
     val mediaProjectionIntent = _mediaProjectionIntent.asStateFlow()
 
     private var countdownJob: Job? = null
+
+    fun toggleScreenshotDetection(enabled: Boolean) {
+        _isDetectionEnabled.value = enabled
+        val intent = Intent(context, com.rekluzlabs.temporatic.data.service.ScreenshotDetectionService::class.java)
+        if (enabled) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(intent)
+            } else {
+                context.startService(intent)
+            }
+        } else {
+            context.stopService(intent)
+        }
+    }
 
     fun setTimerSeconds(seconds: Int) {
         _timerSeconds.value = seconds

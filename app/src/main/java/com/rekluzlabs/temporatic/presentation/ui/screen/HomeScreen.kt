@@ -123,7 +123,7 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = androidx.compose.material.icons.Icons.Default.Folder,
+                        imageVector = Icons.Default.Folder,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary
                     )
@@ -141,6 +141,37 @@ fun HomeScreen(
                         )
                     }
                 }
+            }
+
+            // Detection Toggle
+            val isDetectionEnabled by viewModel.isDetectionEnabled.collectAsState()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.auto_move_screenshots),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = "Automatically move manual screenshots",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    )
+                }
+                Switch(
+                    checked = isDetectionEnabled,
+                    onCheckedChange = { viewModel.toggleScreenshotDetection(it) },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.primary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
+                    )
+                )
             }
 
             if (mediaProjectionIntent == null) {
