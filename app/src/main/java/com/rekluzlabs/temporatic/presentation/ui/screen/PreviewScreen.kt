@@ -97,18 +97,30 @@ fun PreviewScreen(
             }
             
             OutlinedButton(
-                onClick = { /* TODO: Share */ },
+                onClick = { 
+                    screenshotFile?.let { 
+                        com.rekluzlabs.temporatic.utils.ShareHelper.shareScreenshot(context, it) 
+                    }
+                },
                 modifier = Modifier.fillMaxWidth().height(56.dp),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp),
+                enabled = screenshotFile != null
             ) {
                 Text(stringResource(R.string.share))
             }
+
+            val selectedFolderUri by viewModel.selectedFolderUri.collectAsState()
             
             TextButton(
-                onClick = { /* TODO: Save to Folder */ },
-                modifier = Modifier.fillMaxWidth().height(56.dp)
+                onClick = { 
+                    if (selectedFolderUri != null) {
+                        viewModel.saveToSelectedFolder()
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                enabled = bitmap != null
             ) {
-                Text(stringResource(R.string.save_to_folder))
+                Text(if (selectedFolderUri != null) stringResource(R.string.save_to_folder) else "No folder selected")
             }
             
             Spacer(modifier = Modifier.height(16.dp))

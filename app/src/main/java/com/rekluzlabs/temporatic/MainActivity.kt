@@ -35,6 +35,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val folderPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.OpenDocumentTree()
+    ) { uri ->
+        if (uri != null) {
+            contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+            val viewModel: TimerViewModel by viewModels()
+            viewModel.setSelectedFolderUri(uri)
+        }
+    }
+
+    fun requestFolderSelection() {
+        folderPickerLauncher.launch(null)
+    }
+
     fun requestMediaProjection() {
         val manager = getSystemService(MEDIA_PROJECTION_SERVICE) as android.media.projection.MediaProjectionManager
         val intent = manager.createScreenCaptureIntent()
@@ -62,7 +79,11 @@ class MainActivity : ComponentActivity() {
                         label = "ScreenTransition"
                     ) { screen ->
                         when (screen) {
-                            "home" -> HomeScreen(viewModel, onStartRequested = { requestMediaProjection() })
+                            "home" -> HomeScreen(
+                                viewModel, 
+                                onStartRequested = { requestMediaProjection() },
+                                onSelectFolderRequested = { requestFolderSelection() }
+                            )
                             "countdown" -> CountdownScreen(viewModel)
                             "preview" -> PreviewScreen(viewModel)
                         }

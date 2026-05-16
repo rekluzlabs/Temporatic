@@ -41,6 +41,9 @@ class TimerViewModel @Inject constructor(
     private val _screenshotFile = MutableStateFlow<File?>(null)
     val screenshotFile = _screenshotFile.asStateFlow()
 
+    private val _selectedFolderUri = MutableStateFlow<android.net.Uri?>(null)
+    val selectedFolderUri = _selectedFolderUri.asStateFlow()
+
     private val _mediaProjectionIntent = MutableStateFlow<Intent?>(null)
     val mediaProjectionIntent = _mediaProjectionIntent.asStateFlow()
 
@@ -52,6 +55,19 @@ class TimerViewModel @Inject constructor(
 
     fun setMediaProjectionIntent(intent: Intent?) {
         _mediaProjectionIntent.value = intent
+    }
+
+    fun setSelectedFolderUri(uri: android.net.Uri?) {
+        _selectedFolderUri.value = uri
+    }
+
+    fun saveToSelectedFolder() {
+        val bitmap = _capturedBitmap.value ?: return
+        val uri = _selectedFolderUri.value ?: return
+        
+        viewModelScope.launch {
+            FileUtils.saveBitmapToCustomFolder(context, bitmap, uri)
+        }
     }
 
     fun startCountdown(duration: Int) {

@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,10 +27,12 @@ import com.rekluzlabs.temporatic.presentation.viewmodel.TimerViewModel
 @Composable
 fun HomeScreen(
     viewModel: TimerViewModel,
-    onStartRequested: () -> Unit
+    onStartRequested: () -> Unit,
+    onSelectFolderRequested: () -> Unit
 ) {
     val seconds by viewModel.timerSeconds.collectAsState()
     val mediaProjectionIntent by viewModel.mediaProjectionIntent.collectAsState()
+    val selectedFolderUri by viewModel.selectedFolderUri.collectAsState()
     var customSeconds by remember { mutableStateOf("") }
     
     val durations = listOf(5, 10, 15, 20)
@@ -104,6 +108,40 @@ fun HomeScreen(
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                 )
             )
+
+            // Folder Selection
+            Card(
+                onClick = onSelectFolderRequested,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = androidx.compose.material.icons.Icons.Default.Folder,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            text = "Auto-save to Folder",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = if (selectedFolderUri != null) "Folder Selected" else "Tap to select destination",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
 
             if (mediaProjectionIntent == null) {
                 Text(
