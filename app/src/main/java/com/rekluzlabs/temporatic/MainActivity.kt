@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,21 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val screenshotLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val viewModel: TimerViewModel by viewModels()
+            viewModel.setMediaProjectionIntent(result.data)
+        }
+    }
+
+    fun requestMediaProjection() {
+        val manager = getSystemService(MEDIA_PROJECTION_SERVICE) as android.media.projection.MediaProjectionManager
+        val intent = manager.createScreenCaptureIntent()
+        screenshotLauncher.launch(intent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         label = "ScreenTransition"
                     ) { screen ->
                         when (screen) {
-                            "home" -> HomeScreen(viewModel)
+                            "home" -> HomeScreen(viewModel, onStartRequested = { requestMediaProjection() })
                             "countdown" -> CountdownScreen(viewModel)
                             "preview" -> PreviewScreen(viewModel)
                         }

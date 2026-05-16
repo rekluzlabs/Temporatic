@@ -24,9 +24,11 @@ import com.rekluzlabs.temporatic.presentation.viewmodel.TimerViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: TimerViewModel
+    viewModel: TimerViewModel,
+    onStartRequested: () -> Unit
 ) {
     val seconds by viewModel.timerSeconds.collectAsState()
+    val mediaProjectionIntent by viewModel.mediaProjectionIntent.collectAsState()
     var customSeconds by remember { mutableStateOf("") }
     
     val durations = listOf(5, 10, 15, 20)
@@ -102,22 +104,36 @@ fun HomeScreen(
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                 )
             )
+
+            if (mediaProjectionIntent == null) {
+                Text(
+                    text = "Permission required for screen capture",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
             
             Spacer(modifier = Modifier.weight(1f))
             
             // Start Button
             Button(
-                onClick = { viewModel.startCountdown(seconds) },
+                onClick = { 
+                    if (mediaProjectionIntent == null) {
+                        onStartRequested()
+                    } else {
+                        viewModel.startCountdown(seconds)
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp),
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = if (mediaProjectionIntent == null) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
                 )
             ) {
                 Text(
-                    text = stringResource(R.string.start_timer),
+                    text = if (mediaProjectionIntent == null) "Grant Permission" else stringResource(R.string.start_timer),
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold
                     )
