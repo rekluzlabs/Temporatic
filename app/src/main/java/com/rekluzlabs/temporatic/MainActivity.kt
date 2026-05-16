@@ -7,10 +7,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rekluzlabs.temporatic.presentation.ui.screen.CountdownScreen
 import com.rekluzlabs.temporatic.presentation.ui.screen.HomeScreen
+import com.rekluzlabs.temporatic.presentation.ui.screen.PreviewScreen
 import com.rekluzlabs.temporatic.presentation.ui.theme.TemporaticTheme
+import com.rekluzlabs.temporatic.presentation.viewmodel.TimerViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,10 +29,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val viewModel: TimerViewModel = viewModel()
+            val currentScreen by viewModel.currentScreen.collectAsState()
+
             TemporaticTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
-                        HomeScreen()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    androidx.compose.animation.AnimatedContent(
+                        targetState = currentScreen,
+                        transitionSpec = {
+                            fadeIn(animationSpec = tween(300)) togetherWith
+                                    fadeOut(animationSpec = tween(300))
+                        },
+                        label = "ScreenTransition"
+                    ) { screen ->
+                        when (screen) {
+                            "home" -> HomeScreen(viewModel)
+                            "countdown" -> CountdownScreen(viewModel)
+                            "preview" -> PreviewScreen(viewModel)
+                        }
                     }
                 }
             }
