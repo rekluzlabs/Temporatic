@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Temporatic</string>
+    <string name="start_timer">Start Timer</string>
+    <string name="timer_running">Timer Running</string>
+    <string name="minimize_instruction">App minimized. Open your target app.</string>
+    <string name="copy_to_clipboard">Copy to Clipboard</string>
+    <string name="share">Share</string>
+    <string name="save_to_folder">Save to Folder</string>
+    <string name="close">Close</string>
+    <string name="seconds_5">5s</string>
+    <string name="seconds_10">10s</string>
+    <string name="seconds_15">15s</string>
+    <string name="seconds_20">20s</string>
+    <string name="custom_duration">Custom Duration</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="error_generic">Something went wrong</string>
+    <string name="select_folder">Select Folder</string>
+    <string name="screenshot_detection_active">Screenshot Detection Active</string>
+    <string name="auto_move_screenshots">Auto-move screenshots</string>
+</resources>
