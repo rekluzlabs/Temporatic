@@ -2,4 +2,5 @@
 <paths>
     <external-files-path name="screenshots" path="TemporaticScreenshots" />
     <files-path name="internal_screenshots" path="TemporaticScreenshots" />
+    <cache-path name="cache" path="TemporaticShare/" />
 </paths>

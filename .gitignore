@@ -13,3 +13,22 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Kotlin
+*.kotlin_module
+.kotlin/
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Keystore / signing
+*.jks
+*.keystore
+!debug.keystore
+keystore.properties
+
+# Logs
+*.log
