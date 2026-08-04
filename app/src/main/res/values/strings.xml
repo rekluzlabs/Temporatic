@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Temporatic</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
-    <string name="accessibility_service_description">Allows Temporatic to detect the currently active app for organizing screenshots</string>
 </resources>

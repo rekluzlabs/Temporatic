@@ -39,10 +39,9 @@ private val steps = listOf(
     SetupStep(1, "Notifications", "Required for background service"),
     SetupStep(2, "Storage Access", "Save screenshots to your device"),
     SetupStep(3, "Display Over Apps", "Floating capture button"),
-    SetupStep(4, "Accessibility Service", "Detect active app for folders"),
-    SetupStep(5, "Usage Access", "Identify foreground app"),
-    SetupStep(6, "Save Location", "Choose where to save"),
-    SetupStep(7, "All Set!", "You're ready to capture")
+    SetupStep(4, "Usage Access", "Identify foreground app"),
+    SetupStep(5, "Save Location", "Choose where to save"),
+    SetupStep(6, "All Set!", "You're ready to capture")
 )
 
 @Composable
@@ -90,16 +89,15 @@ fun SetupWizardScreen(
                     3 -> OverlayStep(
                         onGranted = { currentStep = 4 }
                     )
-                    4 -> currentStep = 5
-                    5 -> UsageAccessStep(
-                        onGranted = { currentStep = 6 },
-                        onSkip = { currentStep = 6 }
+                    4 -> UsageAccessStep(
+                        onGranted = { currentStep = 5 },
+                        onSkip = { currentStep = 5 }
                     )
-                    6 -> SaveLocationStep(
+                    5 -> SaveLocationStep(
                         storageManager = storageManager,
-                        onDone = { currentStep = 7 }
+                        onDone = { currentStep = 6 }
                     )
-                    7 -> DoneStep(
+                    6 -> DoneStep(
                         onFinish = {
                             com.rekluzlabs.temporatic.utils.FirstRunManager.markSetupCompleted(context)
                             onComplete()
@@ -584,7 +582,6 @@ private fun DoneStep(onFinish: () -> Unit) {
             "Notifications" to (PermissionHelper.hasNotificationPermission(context) || Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU),
             "Storage Access" to PermissionHelper.hasStoragePermission(context),
             "Display Over Apps" to Settings.canDrawOverlays(context),
-            "Accessibility Service" to true,
             "Usage Access" to hasUsageAccessPermission(context),
             "Save Location" to (com.rekluzlabs.temporatic.utils.FirstRunManager.isSetupCompleted(context) || true)
         )
