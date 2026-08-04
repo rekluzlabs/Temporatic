@@ -1,8 +1,8 @@
-# Temporatic v1.1.0 — Accessibility Service Removal + App Folder Organization
+# Temporatic v0.0.7 — Accessibility Service Removal + App Folder Organization
 
 ## Version
 
-- **Version**: 1.1.0 (was 1.0.4-dev)
+- **Version**:007
 - **Version Code**: 26053001
 
 ## Summary
