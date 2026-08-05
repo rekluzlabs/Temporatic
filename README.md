@@ -12,8 +12,8 @@ This app is currently working but should be considered an Alpha build.
 
 <p align="center">
   <img src="images/screenshot_1.png" width="250" />
-  <img src="images/screenshot_2.jpg" width="250" />
-  <img src="images/screenshot_3.jpg" width="250" />
+  <img src="images/screenshot_2.png" width="250" />
+  <img src="images/screenshot_3.png" width="250" />
 </p>
 
 ## Requirements
