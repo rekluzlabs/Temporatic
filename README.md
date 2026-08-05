@@ -1,6 +1,6 @@
 # Temporatic
 ![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red)
-A floating screenshot utility for Android testers. Launch Temporatic once, grant the overlay and screen capture permissions, then switch to whatever app you're testing. A small button sits over the corner of the screen while you work. Tap it whenever you want a screenshot captured. The image is saved to your device and can be shared or emailed without leaving the app you're in.
+<br><br>A floating screenshot utility for Android testers. Launch Temporatic once, grant the overlay and screen capture permissions, then switch to whatever app you're testing. A small button sits over the corner of the screen while you work. Tap it whenever you want a screenshot captured. The image is saved to your device and can be shared or emailed without leaving the app you're in.
 
 Temporatic provides tag, crop, and share options for any screenshot.
 
