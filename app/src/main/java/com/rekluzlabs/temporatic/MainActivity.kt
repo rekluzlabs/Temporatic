@@ -252,33 +252,30 @@ fun TemporaticUI(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp),
-            contentAlignment = Alignment.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Temporatic",
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = "Gameplay Screenshot Utility",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
-                )
-            }
             AsyncImage(
                 model = R.mipmap.ic_launcher,
-                contentDescription = "App icon",
-                modifier = Modifier
-                    .size(64.dp)
-                    .align(Alignment.CenterEnd)
+                contentDescription = "Temporatic logo",
+                modifier = Modifier.size(150.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Temporatic",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "Gameplay Screenshot Utility",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
             )
         }
 
@@ -390,7 +387,7 @@ fun TemporaticUI(
                             )
                         ),
                         linkInteractionListener = {
-                            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS, Uri.parse("package:${context.packageName}"))
                             context.startActivity(intent)
                         }
                     )

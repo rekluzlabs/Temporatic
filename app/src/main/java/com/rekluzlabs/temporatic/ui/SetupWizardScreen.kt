@@ -25,6 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.rekluzlabs.temporatic.R
 import com.rekluzlabs.temporatic.manager.StorageManager
 import com.rekluzlabs.temporatic.utils.PermissionHelper
 
@@ -67,6 +69,16 @@ fun SetupWizardScreen(
             )
 
             StepIndicator(currentStep = currentStep, totalSteps = steps.size - 1)
+
+            Spacer(modifier = Modifier.height(8.dp))
+            AsyncImage(
+                model = R.mipmap.ic_launcher,
+                contentDescription = "Temporatic logo",
+                modifier = Modifier
+                    .size(150.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
 
             Box(
                 modifier = Modifier
@@ -436,7 +448,7 @@ private fun UsageAccessStep(
         if (!hasUsageAccess) {
             Button(
                 onClick = {
-                    context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+                    context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS, Uri.parse("package:${context.packageName}")))
                 },
                 modifier = Modifier.fillMaxWidth().height(48.dp),
                 shape = RoundedCornerShape(12.dp)
