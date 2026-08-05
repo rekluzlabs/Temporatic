@@ -50,6 +50,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.rekluzlabs.temporatic.R
 import com.rekluzlabs.temporatic.manager.StorageManager
 
 @Composable
@@ -280,18 +282,24 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Format", modifier = Modifier.weight(1f))
-                    Row {
-                        listOf("PNG", "JPG").forEach { format ->
-                            FilterChip(
-                                selected = fileFormat == format,
-                                onClick = {
-                                    fileFormat = format
-                                    prefs.edit().putString("file_format", format).apply()
-                                },
-                                label = { Text(format) },
-                                modifier = Modifier.padding(horizontal = 4.dp)
-                            )
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Format")
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row {
+                            listOf("PNG", "JPG").forEach { format ->
+                                FilterChip(
+                                    selected = fileFormat == format,
+                                    onClick = {
+                                        fileFormat = format
+                                        prefs.edit().putString("file_format", format).apply()
+                                    },
+                                    label = { Text(format) },
+                                    modifier = Modifier.padding(horizontal = 4.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -312,24 +320,37 @@ fun SettingsScreen(
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Resize", modifier = Modifier.weight(1f))
-                    Row {
-                        listOf(1.0f, 0.75f, 0.5f, 0.25f).forEach { scale ->
-                            FilterChip(
-                                selected = resizeScale == scale,
-                                onClick = {
-                                    resizeScale = scale
-                                    prefs.edit().putFloat("resize_scale", scale).apply()
-                                },
-                                label = { Text(if(scale == 1.0f) "None" else "${(scale*100).toInt()}%") },
-                                modifier = Modifier.padding(horizontal = 2.dp)
-                            )
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Resize")
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row {
+                            listOf(1.0f, 0.75f, 0.5f, 0.25f).forEach { scale ->
+                                FilterChip(
+                                    selected = resizeScale == scale,
+                                    onClick = {
+                                        resizeScale = scale
+                                        prefs.edit().putFloat("resize_scale", scale).apply()
+                                    },
+                                    label = { Text(if(scale == 1.0f) "None" else "${(scale*100).toInt()}%") },
+                                    modifier = Modifier.padding(horizontal = 2.dp)
+                                )
+                            }
                         }
                     }
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Watermark (Date/Time)", modifier = Modifier.weight(1f))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Timestamp watermark")
+                        Text(
+                            "(Date/Time/Device/Android Version)",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                     Switch(
                         checked = watermarkEnabled,
                         onCheckedChange = {
@@ -494,7 +515,7 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         val annotatedBatteryTip = buildAnnotatedString {
-            append("For best results, ")
+            append("For best results ensure that you ")
             val link = LinkAnnotation.Clickable(
                 tag = "open_settings",
                 styles = TextLinkStyles(
@@ -540,11 +561,42 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        AsyncImage(
+            model = R.drawable.rl_goldlogo_t,
+            contentDescription = "Rekuz Labs logo",
+            modifier = Modifier
+                .size(80.dp)
+                .align(Alignment.CenterHorizontally)
+                .clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://rekluzlabs.github.io/"))
+                    context.startActivity(intent)
+                }
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         Text(
             text = "Created by Rekluz Labs",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = "rekluzlabs@gmail.com",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.primary,
+                textDecoration = TextDecoration.Underline
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:rekluzlabs@gmail.com"))
+                    context.startActivity(intent)
+                },
             textAlign = TextAlign.Center
         )
 
