@@ -8,7 +8,6 @@ Temporatic also includes a timestamp feature that can be toggled in settings. Wh
 
 Built for developers who need to capture real testing sessions without breaking their workflow to handle a screenshot manually each time.
 
-This app is currently working but should be considered an Alpha build.
 
 <p align="center">
   <img src="images/screenshot_1.png" width="250" />
