@@ -10,9 +10,11 @@ Built for developers who need to capture real testing sessions without breaking 
 
 This app is currently working but should be considered an Alpha build.
 
-![Screenshot 1](images/screenshot_1.png)
-![Screenshot 2](images/screenshot_2.jpg)
-![Screenshot 3](images/screenshot_3.jpg)
+<p align="center">
+  <img src="images/screenshot_1.png" width="250" />
+  <img src="images/screenshot_2.jpg" width="250" />
+  <img src="images/screenshot_3.jpg" width="250" />
+</p>
 
 ## Requirements
 
